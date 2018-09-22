@@ -306,5 +306,43 @@ class DropMember(APIView): #개설자가 참여자 -> 확정자
 
         return Response(status=status.HTTP_200_OK)
 
+class OngoingProject(APIView):
+
+    def post(self, request, project_id, format=None):
+        user = request.user #요청보낸 유저 (로긘된) 
+        pstatus = models.Project.objects.get(id = project_id)
+        master_user = pstatus.creator
+        if user == master_user:
+            try:
+                pstatus.project_status = '1'
+                pstatus.save()
+                return Response(status=status.HTTP_200_OK)
+
+            except models.Project.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+        else : 
+            return Response(status=status.HTTP_304_NOT_MODIFIED)
+
+class CompletedProject(APIView):
+
+    def post(self, request, project_id, format=None):
+        user = request.user #요청보낸 유저 (로긘된) 
+        pstatus = models.Project.objects.get(id = project_id)
+        master_user = pstatus.creator
+        
+        if user == master_user:
+            try:
+                pstatus.project_status = '2'
+                pstatus.save()
+
+                return Response(status=status.HTTP_200_OK)
+
+            except models.Project.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+        else : 
+            return Response(status=status.HTTP_304_NOT_MODIFIED)
 
 
+           

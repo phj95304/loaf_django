@@ -63,4 +63,15 @@ urlpatterns = [
         view=views.DropMember.as_view(),
         name="confirm_member"
     ),
+    #시작된 프로젝트
+    url(
+        regex=r'^(?P<project_id>[0-9]+)/ongoing/$',
+        view=views.OngoingProject.as_view(),
+        name="ongoning_project"
+    ),
+    url(
+        regex=r'^(?P<project_id>[0-9]+)/complete/$',
+        view=views.CompletedProject.as_view(),
+        name="completed_project"
+    ),
 ]

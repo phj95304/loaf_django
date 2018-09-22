@@ -28,7 +28,8 @@ class Project(TimeStampedModel):
     schedule = models.CharField(default=0, max_length=140)
     apt = ArrayField(models.CharField(max_length = 1000), default = list)
     apt_score = ArrayField(models.IntegerField(),size=50 ,default = list)
-    
+    # 프로젝트 준비중, 시작, 완료의 상태를 정의하는 필드 (0:준비 1:시작 2:완료)
+    project_status = models.IntegerField(default=0)
    
 
     @property
@@ -48,6 +49,11 @@ class Project(TimeStampedModel):
 
     class Meta:
         ordering = ['-created_at']
+
+
+
+class OngoingProject(TimeStampedModel):
+    """ On going Project Model """
 
 
 
