@@ -17,6 +17,15 @@ from loaf.projects import serializers as projects_serializer
 #             'profile_image',   
 #         )
 
+class TagandInfoSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+
+    class Meta:
+        model = models.User
+        fields = (
+            'username',
+            'tags',
+        )
 
 class UserProfileSerializer(TaggitSerializer, serializers.ModelSerializer):
 
@@ -29,6 +38,7 @@ class UserProfileSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = (
+            'pk',
             'profile_image',
             'username',
             'name',

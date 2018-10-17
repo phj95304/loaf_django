@@ -1,7 +1,9 @@
+import sys
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . import models, serializers
+from . import apriori, apriori_match
 
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
@@ -292,3 +294,20 @@ class UsersRecommand(APIView):
         serializer = serializers.ListUserSerializer(recommand, many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+class TagUserInfo(APIView):
+    def get(self, request, format=None):
+        tag_data = models.User.objects.all()
+
+        # fw = open('input_raw', 'w')
+        # fw.write(tag_data)
+        # fw2 = open('userInfo', 'w')
+        # fw2.write(username_data)
+
+        # apriori.load_data(fw)
+        print(tag_data)
+
+        serializer = serializers.TagandInfoSerializer(tag_data, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        

@@ -58,6 +58,7 @@ urlpatterns = [
         view=views.AptView.as_view(),
         name='project_apt'
     ),
+    #멤버 확정하기
     url(
         regex=r'^(?P<project_id>[0-9]+)/confirm/(?P<join_id>[0-9]+)/$',
         view=views.DropMember.as_view(),
@@ -69,6 +70,7 @@ urlpatterns = [
         view=views.OngoingProject.as_view(),
         name="ongoning_project"
     ),
+    #프로젝트 완료
     url(
         regex=r'^(?P<project_id>[0-9]+)/complete/$',
         view=views.CompletedProject.as_view(),

@@ -43,5 +43,10 @@ urlpatterns = [
         view=views.UserFollowing.as_view(),
         name='user_following'
     ),
+    url(
+        regex=r'^recom/$',
+        view=views.TagUserInfo.as_view(),
+        name='recom base info'
+    ),
     
 ]

@@ -284,3 +284,7 @@ JWT_AUTH = {
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'loaf.users.serializers.SignUpSerializer'
 }
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER' : 'loaf.users.serializers.UserProfileSerializer'
+}
