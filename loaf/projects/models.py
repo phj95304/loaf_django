@@ -85,5 +85,13 @@ class Join(TimeStampedModel):
     joiner = models.ForeignKey(user_models.User, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='join')
 
+    @property
+    def project_title(self):
+        return self.project.title
+
+    @property
+    def project_caption(self):
+        return self.project.caption
+
     def __str__(self):
-        return 'User: {} - Project Caption: {}'.format(self.creator.username, self.project.caption)
+        return 'User: {} - Project Caption: {}'.format(self.joiner.username, self.project.title)

@@ -17,7 +17,9 @@ from loaf.projects import serializers as projects_serializer
 #             'profile_image',   
 #         )
 
-class TagandInfoSerializer(TaggitSerializer, serializers.ModelSerializer):
+
+class TagInfoSerializer(TaggitSerializer, serializers.ModelSerializer):
+
     tags = TagListSerializerField()
 
     class Meta:
@@ -82,7 +84,9 @@ class InputProfileSerializer(TaggitSerializer, serializers.ModelSerializer):
             'major',
             'website',
             'bio',
-            'tags',   
+            'tags',  
+            ##'gender', 
+            ##'name',
         )
 
 
@@ -117,4 +121,3 @@ class InputAPTScoreSerializer(serializers.ModelSerializer):
         fields = (
             'score'  
         )
-

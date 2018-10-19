@@ -143,17 +143,8 @@ def seek_user():
                 print(l)
             break         
 
-##추천된 user 추출 -> output.txt에 결과 저장
-def save_result(line):    
-    with open(sys.argv[3], 'a') as f:    
-            f.write(line)
 
-
-if __name__ == '__main__':
-
-    ##argv = sys.argv 
-    ##output = argv[2]
-
+def main():
     load_data() 
     make_tags_permutations()
     seek_and_sort()

@@ -7,17 +7,53 @@ from  . import apriori_match as compare
 데이터 불러오기
 input.txt 파일의 데이터를 불러와서 하나의 transaction으로 구분해서 list에 넣어 저장
 '''
+min_sup = 0.0
 trxes = list()
-def load_data(a): 
+def load_data(): 
     global trxes
     ## sys.argv[]로 인수 넣어주면 자동으로 ' ' 인식함
-    with open(a, 'r') as f: 
+    with open('input_raw.txt', 'r') as f: 
         input_data = f.read().split('\n')
+        # print(input_data)
         trx_id = 1
-        for trx in input_data: 
-            trx = trx.split('/')
-            trxes.append(trx) 
-            print("trx_id="+str(trx_id) + ': ', trx)
+        for trx in input_data:
+            # print(type(trx))
+            # print(trx)
+            # print("&&&&&&&&&&&")             
+            trx = trx.split(',')
+            if trx[0] == "":
+                print("----------continue 실행")
+                continue
+            # print(trx) ## ["[('username'", " 'guanguuncle')", " ('tags'", " ['서핑'", " '파이썬'", " '리액트'])]"]
+            # print(trx[0]) ## [('username'
+            # print(trx[1]) ## 'guanguuncle')
+            # print(trx[3]) ## ['서핑'
+            # print(trx[4]) ## '파이썬'
+            # print(trx[5]) ## '리액트'])]
+            # print("&&&&&&&&&&&")
+            
+            ## 데이터 구조를 맞춘다.  []/[]/[]/\n
+            # trx_id=63:  ['프로그래밍', 'NCS', '딥러닝']
+            # before split
+            # 드라마/취업/연예인
+            # <class 'str'>
+
+            # after split
+            # ['드라마', '취업', '연예인']
+            # <class 'list'>
+
+            trx_edit = trx[3]+'/'+trx[4]+'/'+trx[5]
+            print(type(trx_edit))
+            trx_edit = trx_edit.replace("]", "")
+            trx_edit = trx_edit.replace("'", "")
+            trx_edit = trx_edit.replace("[", "")
+            trx_edit = trx_edit.replace(")", "")
+            trx_edit = trx_edit.replace(" ", "")
+            print(trx_edit)
+            trx_edit = trx_edit.split('/')
+            trxes.append(trx_edit) 
+            print(type(trx_edit))
+            print("trx_id="+str(trx_id) + ': ', trx_edit)
             trx_id += 1
     
 '''
@@ -27,8 +63,8 @@ def load_data(a):
 def generate_first_frequent_set():
     global trxes
     item_set = dict()
-    for trx in trxes:
-        for item in trx:
+    for trx_edit in trxes:
+        for item in trx_edit:
             if item not in item_set.keys(): 
                 item_set[item] = 1
             else:
@@ -42,14 +78,19 @@ def generate_first_frequent_set():
 
 def filter_by_min_sup(candidate):
     global trxes
+    global min_sup
     ## 매번 min_sup을 비교할 때마다 value/len(trxes) 하는 것보다 min_sup를 count로 바꿔주면 효율적
     min_sup_cnt = min_sup * len(trxes) 
+    print("##### filter_by_min_sup")
+    print(min_sup)
+    print("##### filter_by_min_sup에서 min sup cnt")
+    print(min_sup_cnt)
     ## for문 와중에 딕셔너리 사이즈가 변경 되면 안 되기에 삭제를 하지 못함 -> dict 안의 sub-dict을 뽑아냄
     frequent_set = {key: candidate[key] for key in candidate.keys() if candidate[key] >= min_sup_cnt}
     
     ## min_sup을 만족하는 candidate가 하나라도 없으면 exit
     if len(frequent_set) < 1: 
-        exit() 
+        sys.exit(1)
     else:
         return frequent_set
         
@@ -129,8 +170,8 @@ def prune(length, previous_frequent_set, candidate):
     
     ## k+1 frequent set을 DB Scan을 통해 count한다
     for key in frequent_set.keys():
-        for trx in trxes:
-            if set(key) <= set(trx): 
+        for trx_edit in trxes:
+            if set(key) <= set(trx_edit): 
                 frequent_set[key] = frequent_set[key] + 1
     
     ## 마지막으로 minimum suppport로 가지치기
@@ -157,8 +198,8 @@ def apply_association_rule(length, frequent_set):
                 support = freq / len(trxes) * 100
                 
                 cnt_item = 0
-                for trx in trxes:
-                    if set(trx) >= item:
+                for trx_edit in trxes:
+                    if set(trx_edit) >= item:
                         cnt_item = cnt_item + 1
                 confidence = freq / cnt_item * 100 
                 print("----------item ==", item)
@@ -176,23 +217,26 @@ def apply_association_rule(length, frequent_set):
 '''
 def save_result(line):
     # sorting한다 
-    # print("support : "+line[-6:])
+    print("!!! save result !!!")
     
-    with open(sys.argv[3], 'a') as f:    
+    with open('output_raw_3_mul.txt', 'a') as f:    
             f.write(line)
 
     # db에서는 결과가 순서대로 정렬되어있다.
     # 비교할 관심분야의 경우의 수 만들어서 비교 
 
 
-if __name__ == '__main__':
+##if __name__ == '__main__':
+def main(): 
     #print("Number of arguments: ", len(sys.argv), 'arguments.')
     #print("Argument List: ", sys.argv, "\n\n")
-
+    global min_sup
     ## arguments 리스트로 저장
     argv = sys.argv 
-    min_sup = float(argv[1])/100
-    output = argv[3]
+    min_sup = float(2)/100
+    print("###### main")
+    print(min_sup)
+    #output = argv[3]
 
     ## 데이터 로딩
     load_data() 
@@ -209,7 +253,7 @@ if __name__ == '__main__':
         
         ## 더 이상 candidate 만들어지지 않을 때, 
         if len(candidate) == 0: 
-            exit()
+            break
         
         ## self join으로 뽑힌 candidate를 pruning 한다
         candidate = prune(length, previous_frequent_set, candidate)
@@ -219,7 +263,7 @@ if __name__ == '__main__':
         print("---------------association rule is done---------------")
         ## 더 이상 후보를 generate 못하면 exit
         if candidate == -1: 
-            exit()
+            break
         else:
         ## frequest_set의 리스트에 추가하고 다음 candidate를 위해 길이를 1 증가
             frequent_set.append(candidate)

@@ -9,19 +9,29 @@ urlpatterns = [
         name='explore_users'
     ),
     url(
-        regex=r'^recommand/$',
-        view=views.UsersRecommand.as_view(),
-        name='recommand_users'
+        regex=r'^recom/$',
+        view=views.TagUserInfo.as_view(),
+        name='tag_info'
     ),
-    url(
-        regex=r'^(?P<username>\w+)/recommand/$',
-        view=views.RecommandUser.as_view(),
-        name='user_recommand'
-    ),
+    # url(
+    #     regex=r'^recommand/$',
+    #     view=views.UsersRecommand.as_view(),
+    #     name='recommand_users'
+    # ),
+    # url(
+    #     regex=r'^(?P<username>\w+)/recommand/$',
+    #     view=views.RecommandUser.as_view(),
+    #     name='user_recommand'
+    # ),
     url(
         regex=r'^(?P<username>\w+)/$',
         view=views.UserProfile.as_view(),
         name='user_profile'
+    ),
+    url(
+        regex=r'^(?P<username>\w+)/joinedProjects/$',
+        view=views.JoinedProject.as_view(),
+        name="joined_projects"
     ),
     url(
         regex=r'(?P<user_id>[0-9]+)/follow/$',
@@ -43,10 +53,4 @@ urlpatterns = [
         view=views.UserFollowing.as_view(),
         name='user_following'
     ),
-    url(
-        regex=r'^recom/$',
-        view=views.TagUserInfo.as_view(),
-        name='recom base info'
-    ),
-    
 ]

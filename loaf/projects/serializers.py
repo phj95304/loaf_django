@@ -95,6 +95,7 @@ class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
             'member_count',
             'max_member',
             'schedule',
+            'apt',
             'apt_score',
             'project_status',
             
@@ -124,3 +125,13 @@ class APTSerializer(serializers.ModelSerializer):  #지원하기 눌렀을때 �
             'apt',
         )
 
+class JoinedSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = models.Join
+        fields = (
+            'project',
+            'project_title',
+            'project_caption'
+        )
