@@ -5,6 +5,20 @@ from taggit_serializer.serializers import (TagListSerializerField,
 from . import models
 from loaf.users import models as user_models
 
+
+## 프로젝트 아이디와 태그
+class TagInfoSerializer(TaggitSerializer, serializers.ModelSerializer):
+
+    tags = TagListSerializerField()
+
+    class Meta:
+        model = models.Project
+        fields = (
+            'id',
+            'tags',
+        )
+
+
 class CountProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -17,7 +31,7 @@ class CountProjectSerializer(serializers.ModelSerializer):
             'like_count',
             'score',
             'apt',
-            'project_status'
+            #'scores_apt'
         )
 
 class FeedUserSerializer(serializers.ModelSerializer):
@@ -52,13 +66,14 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 
-class MemberSerializer(serializers.ModelSerializer):
-
+class MemberSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
     class Meta:
         model = user_models.User
         fields = (
+            'profile_image',
             'username',
-            'profile_image'
+            'tags',
         )
 
 class JoinSerializer(serializers.ModelSerializer):
@@ -69,7 +84,8 @@ class JoinSerializer(serializers.ModelSerializer):
         model = models.Join
         fields = (
             'id',
-            'joiner'
+            'joiner',
+            'score_apt'
         )
 
 class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -96,9 +112,8 @@ class ProjectSerializer(TaggitSerializer, serializers.ModelSerializer):
             'max_member',
             'schedule',
             'apt',
-            'apt_score',
+            ##'scores_apt',
             'project_status',
-            
         )
 
 class InputProjectSerializer(serializers.ModelSerializer):
@@ -114,7 +129,7 @@ class InputProjectSerializer(serializers.ModelSerializer):
             'max_member',
             'schedule',
             'tags',
-            'apt' #필요자질
+            'apt', #필요자질
         )
 
 class APTSerializer(serializers.ModelSerializer):  #지원하기 눌렀을때 자질보여주기
@@ -125,8 +140,16 @@ class APTSerializer(serializers.ModelSerializer):  #지원하기 눌렀을때 �
             'apt',
         )
 
-class JoinedSerializer(serializers.ModelSerializer):
+class JoinedProjectSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = models.Project
+        fields = (
+            'title',
+            'caption'
+        )
+
+class JoinedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Join
@@ -135,3 +158,12 @@ class JoinedSerializer(serializers.ModelSerializer):
             'project_title',
             'project_caption'
         )
+
+class AptScoreInputSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Join
+        fields = (
+            'score_apt',
+        )
+

@@ -21,11 +21,23 @@ from loaf.projects import serializers as projects_serializer
 class TagInfoSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     tags = TagListSerializerField()
-
+    projects = projects_serializer.TagInfoSerializer(many=True, read_only=True)
     class Meta:
         model = models.User
         fields = (
             'username',
+            'tags',
+            'projects',
+        )
+
+class TargetUserTagSerializer(TaggitSerializer, serializers.ModelSerializer):
+
+    tags = TagListSerializerField()
+
+    class Meta:
+        model = models.User
+        fields = (
+            
             'tags',
         )
 
@@ -33,8 +45,6 @@ class UserProfileSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     projects = projects_serializer.CountProjectSerializer(many=True, read_only=True)
     post_count = serializers.ReadOnlyField()  # ReadOnly 해당필드들을 수정하지 않는다.
-    followers_count = serializers.ReadOnlyField()
-    following_count = serializers.ReadOnlyField()
     tags = TagListSerializerField()
 
     class Meta:
@@ -48,13 +58,12 @@ class UserProfileSerializer(TaggitSerializer, serializers.ModelSerializer):
             'bio',
             'website',
             'post_count',
-            'followers_count',
-            'following_count',
             'projects',
             'tags',
             'address',
             'major'
         )
+
 
 
 class ListUserSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -68,7 +77,8 @@ class ListUserSerializer(TaggitSerializer, serializers.ModelSerializer):
             'profile_image',
             'username',
             'school',
-            'tags'
+            'tags',
+            
         )
 
 class InputProfileSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -78,17 +88,16 @@ class InputProfileSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = (
-            'profile_image',
+           ## 'profile_image',
+            'name',
             'address',
             'school',
             'major',
             'website',
             'bio',
-            'tags',  
-            ##'gender', 
-            ##'name',
+            'tags',   
+            
         )
-
 
 
 

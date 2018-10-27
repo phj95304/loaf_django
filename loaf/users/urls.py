@@ -9,9 +9,24 @@ urlpatterns = [
         name='explore_users'
     ),
     url(
-        regex=r'^recom/$',
+        regex=r'^startUserApriori/$',
         view=views.TagUserInfo.as_view(),
         name='tag_info'
+    ),
+    url(
+        regex=r'^(?P<username>\w+)/findRecomUsers/$',
+        view=views.UsersRecommand.as_view(),
+        name="Recommend_user"
+    ),
+    url(
+        regex=r'^startProjectApriori/$',
+        view=views.TagUserProjectInfo.as_view(),
+        name='tag_info'
+    ),
+    url(
+        regex=r'^(?P<username>\w+)/findRecomProjects/$',
+        view=views.ProjectsRecommand.as_view(),
+        name="Recommend_user"
     ),
     # url(
     #     regex=r'^recommand/$',
@@ -28,6 +43,7 @@ urlpatterns = [
         view=views.UserProfile.as_view(),
         name='user_profile'
     ),
+    
     url(
         regex=r'^(?P<username>\w+)/joinedProjects/$',
         view=views.JoinedProject.as_view(),

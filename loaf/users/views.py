@@ -3,7 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . import models, serializers
-from . import apriori as startApriori
+from . import apriori_user as startApriori
+from . import apriori_match_user as startAprioriMatch
+from . import apriori_project as startApriori_project
+from . import apriori_match_project as startAprioriMatch_project
 from loaf.projects import models as project_models
 from loaf.projects import serializers as project_serializers
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
@@ -14,9 +17,7 @@ class ExploreUsers(APIView):
     
     def get(self, request, format=None):
         all_users = models.User.objects#.all().order_by('-date_joined')
-
         serializer = serializers.ListUserSerializer(all_users, many=True)
-        print("dkdrdkr3")
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
@@ -94,63 +95,28 @@ class UserProfile(APIView):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, username, fomat=None):
+    def post(self, request, username, format=None):
 
         user = request.user
-
         found_user = self.get_user(username)
 
-        if found_user is None :
-
+        if found_user is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        elif found_user.username != user.username :
-
+        elif found_user.username != user.username:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         else:
-
             serializer = serializers.InputProfileSerializer(
                 found_user, data=request.data, partial=True)
-            
+
             if serializer.is_valid():
-
                 serializer.save()
-
                 return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-            else :
+            else:
 
-                return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request, username, format=None):
-
-        user = request.user
-
-        found_user = self.get_user(username)
-
-        if found_user is None :
-
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        elif found_user.username != user.username :
-
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        else:
-
-            serializer = serializers.InputProfileSerializer(
-                found_user, data=request.data, partial=True)
-            
-            if serializer.is_valid():
-
-                serializer.save()
-
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-            else :
-
-                return Response(data=serializer.data, status=statsu.HTTP_400_BAD_REQUEST)
+                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FollowUser(APIView):
 
@@ -310,22 +276,19 @@ class JoinedProject(APIView):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+
 class TagUserInfo(APIView):
-    print("dkdrdkr1")
     def get(self, request, format=None):
         tag_data = models.User.objects.all()
 
         serializer = serializers.TagInfoSerializer(tag_data, many=True)
-        with open('input_raw.txt', 'w') as the_file:
+        with open('input_raw_user.txt', 'w') as the_file:
             for i in serializer.data:
                 i = list(i.items())
-                
-                # print(i[0])
-                # print(i[1])
+               
                 tag_list_item = str(i[1])
                 tag_list_item = tag_list_item.split(",")
-                # print(tag_list_item[0]) ## ('tags'
-                # print(tag_list_item[1]) ## [])
+                
                 tag_list_item = tag_list_item[1]
                 if tag_list_item == " [])":
                     print("[]) 실행됨")
@@ -341,13 +304,130 @@ class TagUserInfo(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class UsersRecommand(APIView):## 유저별 유저 추천
-
+    
+    def get_user(self, username):
+        try:
+            found_user = models.User.objects.get(username=username)
+            return found_user
+        except models.User.DoesNotExist:
+            return None
+    def get(self, request, username, format=None):
+        found_user = self.get_user(username)
+        if found_user is None :
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.TargetUserTagSerializer(found_user)
+        print("--------")
+        print(serializer.data)
+        tag = serializer.data
+        tag = str(tag)
+        print(tag)
+        tag = tag.replace("{'tags': [","")
+        tag = tag.replace("]}","")
+        tag = tag.replace("'","")
+        print(tag)
+        tag = tag.split(",")
+        print(tag)
+        username = username
+        startAprioriMatch.main(tag,username)
+        
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    def get_match_username(username):
+        match_username = username
+        print(match_username)
+        
+class TagUserProjectInfo(APIView):
     def get(self, request, format=None):
+        tag_data = models.User.objects.all()
 
-        recommand = models.User.objects.all().reverse()[1:4]
+        serializer = serializers.TagInfoSerializer(tag_data, many=True)
+        with open('input_raw_project.txt', 'w', encoding = 'utf-8') as the_file:
+            for j in serializer.data: ## 유저 아이디랑 태그
+                j = list(j.items())
+                print(j)
+                print("----------")
+                userName = str(j[0])
+                userName = userName.split(",")
+                userName = userName[1]
+                userName = userName.replace(" '","")
+                userName = userName.replace("'","")
+                userName = userName.replace(")","")
+                print(userName)
 
-        serializer = serializers.ListUserSerializer(recommand, many=True)
+                userTag = str(j[1])
+                print(userTag)
+                if userTag == "('tags', [])": ## 빈 태그 제거
+                    print("유저 태그 없음")
+                    continue
+                userTag = userTag.split(",")
+                userTag = userTag[1]+"/"+userTag[2]+"/"+userTag[3]
+                userTag = userTag.replace("'", "")
+                userTag = userTag.replace("[", "")
+                userTag = userTag.replace(" ", "")
+                userTag = userTag.replace("])", "")
+                print(userTag)
 
+                projectIdTag = str(j[2]) ## project가 튜플로 id와tag가 같이 있음
+                # print(projectIdTag)
+                if projectIdTag  == "('projects', [])": ## 빈 태그 제거
+                    print("마스터 프로젝트 없음")
+                    continue
+
+                projectIdTag = projectIdTag.split("OrderedDict")
+                for i in range(1,len(projectIdTag)):
+                    pro = projectIdTag[i]
+                    #print(pro)
+                    pto = str(pro).split(",")
+                    projectId = pto[1]
+                    projectId = projectId.replace(")", "")
+                    projectId = projectId.replace(" ", "")
+                    
+                    projectTag = pto[3]+"/"+pto[4]+"/"+pto[5]
+                    projectTag = projectTag.replace("])", "")
+                    projectTag = projectTag.replace("[", "")
+                    projectTag = projectTag.replace("'", "")
+                    projectTag = projectTag.replace(" ", "")
+                    print(projectId)
+                    print(projectTag)
+                    print("****************")
+                    
+                    line =  userName+"," + projectId+"," + userTag+"/" + projectTag + "\n"
+                    the_file.write(str(line))
+                    
+                    print(line)
+                
+                print("------%----")
+                  
+
+        startApriori_project.main()
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+class ProjectsRecommand(APIView):## 유저별 유저 추천
+    def get_user(self, username):
+        try:
+            found_user = models.User.objects.get(username=username)
+            return found_user
+        except models.User.DoesNotExist:
+            return None
+    def get(self, request, username, format=None):
+        found_user = self.get_user(username)
+        if found_user is None :
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.TargetUserTagSerializer(found_user)
+        print("--------")
+        print(serializer.data)
+        tag = serializer.data
+        tag = str(tag)
+        print(tag)
+        tag = tag.replace("{'tags': [","")
+        tag = tag.replace("]}","")
+        tag = tag.replace("'","")
+        print(tag)
+        tag = tag.split(",")
+        print(tag)
+        username = username
+        startAprioriMatch_project.main(tag, username)
         
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    def get_match_projectId(projectId):
+        match_projectId = projectId
+        print(projectId)
