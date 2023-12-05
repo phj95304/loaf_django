@@ -38,7 +38,7 @@ Unlike many competitors relying on anonymous comments for team formation, Loaf s
 
 
 
-Developing loaf
+Reproducing Loaf
 ====
 
 sharing project thank u
