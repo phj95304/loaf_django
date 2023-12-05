@@ -1,4 +1,5 @@
-# Loaf - Project and Teammate Recommendation Platform
+Loaf - Project and Teammate Recommendation Platform
+====
 
 Loaf is a platform designed to facilitate project and teammate recommendations through user data analysis. As university students engage in approximately two external activities per year, finding suitable teammates for projects or studies can be challenging. Many students struggle to assemble a team or are unsure about the required qualifications.
 
@@ -30,6 +31,9 @@ Unlike many competitors relying on anonymous comments for team formation, Loaf s
 - [AsiaToday Link](http://www.asiatoday.co.kr/view.php?key=20181116010009943)
 - [NewsA Link](http://www.newsa.co.kr/news/articleView.html?idxno=194846#09Xb)
 - [MoneyToday Link](http://ubiz.mt.co.kr/articleView.html?no=2018111617507475355&aType=u0101)
+
+
+
 
 
 Developing loaf
