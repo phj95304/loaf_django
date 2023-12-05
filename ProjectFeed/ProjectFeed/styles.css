@@ -1,0 +1,12 @@
+.projectfeed_container{
+    display: grid;
+    grid-template-columns: 65% 35%;    
+}
+.projectfeed_recomprojects{
+    margin-top: 20%;
+}
+
+.projectfeed_recomprojects_title{
+    font-size: 1rem;
+    font-weight: bold;
+}
