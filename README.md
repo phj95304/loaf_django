@@ -34,6 +34,13 @@ Unlike many competitors relying on anonymous comments for team formation, Loaf s
 - [MoneyToday Link](http://ubiz.mt.co.kr/articleView.html?no=2018111617507475355&aType=u0101)
 
 
+<div style="display: flex; flex-direction: row;">
+    <img src="./images/FDTO_1.jpg" alt="FDTO_1" style="width: 25%;">
+    <img src="./images/FDTO_2.jpg" alt="FDTO_2" style="width: 25%;">
+    <img src="./images/FDTO_3.jpg" alt="FDTO_3" style="width: 25%;">
+    <img src="./images/FDTO_4.jpg" alt="FDTO_4" style="width: 25%;">
+</div>
+
 
 
 
