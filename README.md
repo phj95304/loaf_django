@@ -22,7 +22,17 @@ To address this issue, we introduce "Loaf: User Data Analysis for Project and Te
 
 Unlike many competitors relying on anonymous comments for team formation, Loaf stands out by analyzing user data to recommend not only fitting team members but also projects that would benefit the user.
 
-loaf
+### Award
+**2nd Prize in the 6th University Student Digital Solution Challenge (K-Hackathon), Ministry of Science and ICT [Nov 2018]**
+- National-wide Development Competition
+
+## Interviews for Winners of the 6th University Student Digital Solution Challenger (K-Hackathon)
+- [AsiaToday Link](http://www.asiatoday.co.kr/view.php?key=20181116010009943)
+- [NewsA Link](http://www.newsa.co.kr/news/articleView.html?idxno=194846#09Xb)
+- [MoneyToday Link](http://ubiz.mt.co.kr/articleView.html?no=2018111617507475355&aType=u0101)
+
+
+Developing loaf
 ====
 
 sharing project thank u
